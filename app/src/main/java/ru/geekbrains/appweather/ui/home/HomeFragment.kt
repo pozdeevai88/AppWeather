@@ -5,7 +5,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import com.google.android.material.snackbar.Snackbar
 import ru.geekbrains.appweather.AppState
@@ -15,26 +14,26 @@ import ru.geekbrains.appweather.databinding.FragmentHomeBinding
 
 class HomeFragment : Fragment() {
 
-    private lateinit var homeViewModel: HomeViewModel
-    private var _binding: FragmentHomeBinding? = null
-    private val binding get() = _binding!!
+    private val homeViewModel: HomeViewModel by lazy {
+        ViewModelProvider(this).get(HomeViewModel::class.java)
+    }
+    private var isDataSetRus: Boolean = true
 
     private val adapter = HomeFragmentAdapter(object : OnItemViewClickListener {
         override fun onItemViewClick(weather: Weather) {
-            val manager = activity?.supportFragmentManager
-            if (manager != null) {
-                val bundle = Bundle()
-                bundle.putParcelable(DetailsFragment.BUNDLE_EXTRA, weather)
-                manager.popBackStack()
-                manager.beginTransaction()
-                    .replace(R.id.nav_host_fragment, DetailsFragment.newInstance(bundle))
+            activity?.supportFragmentManager?.apply {
+                beginTransaction()
+                    .replace(R.id.nav_host_fragment, DetailsFragment.newInstance(Bundle().apply {
+                        putParcelable(DetailsFragment.BUNDLE_EXTRA, weather)
+                    }))
                     .addToBackStack("")
                     .commitAllowingStateLoss()
             }
         }
     })
 
-    private var isDataSetRus: Boolean = true
+    private var _binding: FragmentHomeBinding? = null
+    private val binding get() = _binding!!
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -49,7 +48,7 @@ class HomeFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         binding.mainFragmentRecyclerView.adapter = adapter
         binding.mainFragmentFAB.setOnClickListener { changeWeatherDataSet() }
-        homeViewModel = ViewModelProvider(this).get(HomeViewModel::class.java)
+//        homeViewModel = ViewModelProvider(this).get(HomeViewModel::class.java)
         homeViewModel.getLiveData().observe(viewLifecycleOwner, { renderData(it) })
         homeViewModel.getWeatherFromLocalSourceRus()
     }
@@ -76,14 +75,21 @@ class HomeFragment : Fragment() {
             }
             is AppState.Error -> {
                 binding.mainFragmentLoadingLayout.visibility = View.GONE
-                Snackbar
-                    .make(binding.mainFragmentFAB, getString(R.string.error),
-                        Snackbar.LENGTH_INDEFINITE)
-                    .setAction(getString(R.string.reload)) {
-                        homeViewModel.getWeatherFromLocalSourceRus() }
-                    .show()
+                binding.mainFragmentRootView.showSnackBar(
+                    getString(R.string.error),
+                    getString(R.string.reload),
+                    { homeViewModel.getWeatherFromLocalSourceRus() })
             }
         }
+    }
+
+    private fun View.showSnackBar(
+        text: String,
+        actionText: String,
+        action: (View) -> Unit,
+        length: Int = Snackbar.LENGTH_INDEFINITE
+    ) {
+        Snackbar.make(this, text, length).setAction(actionText, action).show()
     }
 
     override fun onDestroyView() {
