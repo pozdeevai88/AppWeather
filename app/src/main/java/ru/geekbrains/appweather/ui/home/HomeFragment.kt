@@ -17,8 +17,6 @@ import ru.geekbrains.appweather.AppState
 import ru.geekbrains.appweather.R
 import ru.geekbrains.appweather.Weather
 import ru.geekbrains.appweather.databinding.FragmentHomeBinding
-import java.util.*
-
 
 class HomeFragment : Fragment() {
 
@@ -92,8 +90,6 @@ class HomeFragment : Fragment() {
             is AppState.Success -> {
                 binding.mainFragmentLoadingLayout.visibility = View.GONE
                 adapter.setWeather(appState.weatherData)
-//                binding.mainFragmentRootView.showSnackBarFromRes(R.string.app_name)
-//                binding.mainFragmentRootView.showSnackBarNoAction()
             }
             is AppState.Loading -> {
                 binding.mainFragmentLoadingLayout.visibility = View.VISIBLE
@@ -115,16 +111,6 @@ class HomeFragment : Fragment() {
         length: Int = Snackbar.LENGTH_INDEFINITE
     ) {
         Snackbar.make(this, text, length).setAction(actionText, action).show()
-    }
-
-    private fun View.showSnackBarFromRes(
-        id: Int
-    ) {
-        Snackbar.make(this, context.resources.getText(id) ,2000).show()
-    }
-
-    private fun View.showSnackBarNoAction() {
-        Snackbar.make(this, R.string.app_name ,2000).show()
     }
 
     override fun onDestroyView() {

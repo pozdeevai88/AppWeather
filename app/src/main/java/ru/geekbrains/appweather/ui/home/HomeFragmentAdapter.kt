@@ -8,7 +8,7 @@ import androidx.recyclerview.widget.RecyclerView
 import ru.geekbrains.appweather.R
 import ru.geekbrains.appweather.Weather
 
-class HomeFragmentAdapter (private var onItemViewClickListener: HomeFragment.OnItemViewClickListener?):
+class HomeFragmentAdapter(private var onItemViewClickListener: HomeFragment.OnItemViewClickListener?) :
     RecyclerView.Adapter<HomeFragmentAdapter.HomeViewHolder>() {
 
     private var weatherData: List<Weather> = listOf()
