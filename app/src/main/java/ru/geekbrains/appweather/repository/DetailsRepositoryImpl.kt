@@ -1,13 +1,14 @@
 package ru.geekbrains.appweather.repository
 
-import okhttp3.Callback
+import ru.geekbrains.appweather.model.WeatherDTO
 
 class DetailsRepositoryImpl(private val remoteDataSource: RemoteDataSource) :
     DetailsRepository {
     override fun getWeatherDetailsFromServer(
-        requestLink: String, callback:
-        Callback
+        lat: Double,
+        lon: Double,
+        callback: retrofit2.Callback<WeatherDTO>
     ) {
-        remoteDataSource.getWeatherDetails(requestLink, callback)
+        remoteDataSource.getWeatherDetails(lat, lon, callback)
     }
 }

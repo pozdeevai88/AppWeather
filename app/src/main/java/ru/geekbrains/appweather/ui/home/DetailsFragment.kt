@@ -26,13 +26,6 @@ const val DETAILS_TEMP_EXTRA = "TEMPERATURE"
 const val DETAILS_FEELS_LIKE_EXTRA = "FEELS LIKE"
 const val DETAILS_CONDITION_EXTRA = "CONDITION"
 
-private const val TEMP_INVALID = -100
-private const val FEELS_LIKE_INVALID = -100
-private const val PROCESS_ERROR = "Обработка ошибки"
-private const val YANDEX_API_HEADER = "X-Yandex-API-Key"
-private const val YANDEX_MAIN_LINK = "https://api.weather.yandex.ru/v2/forecast?"
-private const val FORECA_MAIN_LINK = "https://pfa.foreca.com"
-
 class DetailsFragment : Fragment() {
     private var _binding: FragmentDetailsBinding? = null
     private val binding get() = _binding!!
@@ -52,11 +45,9 @@ class DetailsFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         weatherBundle = arguments?.getParcelable(BUNDLE_EXTRA) ?: Weather()
-        viewModel.getLiveData().observe(viewLifecycleOwner, { renderData(it) })
-        viewModel.getWeatherFromRemoteSource(
-            YANDEX_MAIN_LINK +
-                    "lat=${weatherBundle.city.lat}&lon=${weatherBundle.city.lon}"
-        )
+        viewModel.detailsLiveData.observe(viewLifecycleOwner, { renderData(it) })
+        viewModel.getWeatherFromRemoteSource(weatherBundle.city.lat,
+            weatherBundle.city.lon)
     }
 
     private fun renderData(appState: AppState) {
@@ -76,8 +67,8 @@ class DetailsFragment : Fragment() {
                 binding.mainView.showSnackBar(
                     getString(R.string.error),
                     getString(R.string.reload),
-                    { viewModel.getWeatherFromRemoteSource(YANDEX_MAIN_LINK +
-                            "lat=${weatherBundle.city.lat}&lon=${weatherBundle.city.lon}") })
+                    { viewModel.getWeatherFromRemoteSource(weatherBundle.city.lat,
+                        weatherBundle.city.lon) })
             }
         }
     }
