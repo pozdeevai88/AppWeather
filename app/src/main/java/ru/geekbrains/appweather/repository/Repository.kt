@@ -1,4 +1,8 @@
-package ru.geekbrains.appweather
+package ru.geekbrains.appweather.repository
+
+import ru.geekbrains.appweather.model.Weather
+import ru.geekbrains.appweather.model.getRussianCities
+import ru.geekbrains.appweather.model.getWorldCities
 
 interface Repository {
     fun getWeatherFromServer(): Weather

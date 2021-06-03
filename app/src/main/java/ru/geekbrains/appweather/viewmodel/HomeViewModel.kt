@@ -1,11 +1,10 @@
-package ru.geekbrains.appweather.ui.home
+package ru.geekbrains.appweather.viewmodel
 
 import android.os.SystemClock.sleep
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import ru.geekbrains.appweather.AppState
-import ru.geekbrains.appweather.Repository
-import ru.geekbrains.appweather.RepositoryImpl
+import ru.geekbrains.appweather.repository.Repository
+import ru.geekbrains.appweather.repository.RepositoryImpl
 
 class HomeViewModel(
     private val liveDataToObserve: MutableLiveData<AppState> = MutableLiveData(),

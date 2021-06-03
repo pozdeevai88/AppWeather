@@ -13,10 +13,11 @@ import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import com.google.android.material.snackbar.Snackbar
-import ru.geekbrains.appweather.AppState
+import ru.geekbrains.appweather.viewmodel.AppState
 import ru.geekbrains.appweather.R
-import ru.geekbrains.appweather.Weather
+import ru.geekbrains.appweather.model.Weather
 import ru.geekbrains.appweather.databinding.FragmentHomeBinding
+import ru.geekbrains.appweather.viewmodel.HomeViewModel
 
 class HomeFragment : Fragment() {
 
@@ -70,8 +71,8 @@ class HomeFragment : Fragment() {
         binding.mainFragmentFAB.setOnClickListener { changeWeatherDataSet() }
         homeViewModel.getLiveData().observe(viewLifecycleOwner, { renderData(it) })
         homeViewModel.getWeatherFromLocalSourceRus()
-        val filter = IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION)
-        context?.registerReceiver(broadcastReceiver, filter)
+//        val filter = IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION)
+//        context?.registerReceiver(broadcastReceiver, filter)
     }
 
     private fun changeWeatherDataSet() {
