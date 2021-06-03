@@ -1,11 +1,14 @@
 package ru.geekbrains.appweather.ui.home
 
+import android.net.Uri
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.lifecycle.ViewModelProvider
+import com.github.twocoffeesoneteam.glidetovectoryou.GlideToVectorYou
+import kotlinx.android.synthetic.main.fragment_details.*
 import ru.geekbrains.appweather.*
 import ru.geekbrains.appweather.databinding.FragmentDetailsBinding
 import ru.geekbrains.appweather.model.Weather
@@ -84,6 +87,13 @@ class DetailsFragment : Fragment() {
         binding.temperatureValue.text = weather.temperature.toString()
         binding.feelsLikeValue.text = weather.feelsLike.toString()
         binding.weatherCondition.text = weather.condition
+        weather.icon?.let {
+            GlideToVectorYou.justLoadImage(
+                activity,
+                Uri.parse("https://yastatic.net/weather/i/icons/blueye/color/svg/${it}.svg"),
+                weatherIcon
+            )
+        }
     }
 
     override fun onDestroyView() {

@@ -10,6 +10,6 @@ fun convertDtoToModel(weatherDTO: WeatherDTO): List<Weather> {
     return listOf(
         Weather(
             getDefaultCity(), fact.temp!!, fact.feels_like!!,
-        fact.condition!!)
+        fact.condition!!, fact.icon!!)
     )
 }
