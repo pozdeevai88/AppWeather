@@ -20,5 +20,5 @@ fun convertHistoryEntityToWeather(entityList: List<HistoryEntity>):
 }
 
 fun convertWeatherToEntity(weather: Weather): HistoryEntity {
-    return HistoryEntity(0, weather.city.city, weather.temperature, weather.condition, 0)
+    return HistoryEntity(0, weather.city.city, weather.temperature, weather.condition)
 }
