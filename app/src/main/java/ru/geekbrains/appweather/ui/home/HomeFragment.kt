@@ -3,8 +3,6 @@ package ru.geekbrains.appweather.ui.home
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
-import android.content.IntentFilter
-import android.net.ConnectivityManager
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -19,13 +17,14 @@ import ru.geekbrains.appweather.model.Weather
 import ru.geekbrains.appweather.databinding.FragmentHomeBinding
 import ru.geekbrains.appweather.viewmodel.HomeViewModel
 
+private const val IS_WORLD_KEY = "LIST_OF_TOWNS_KEY"
+
 class HomeFragment : Fragment() {
 
     private val homeViewModel: HomeViewModel by lazy {
         ViewModelProvider(this).get(HomeViewModel::class.java)
     }
     private var isDataSetRus: Boolean = true
-
     private val adapter = HomeFragmentAdapter(object : OnItemViewClickListener {
         override fun onItemViewClick(weather: Weather) {
             activity?.supportFragmentManager?.apply {
@@ -38,7 +37,6 @@ class HomeFragment : Fragment() {
             }
         }
     })
-
     private val broadcastReceiver: BroadcastReceiver = object : BroadcastReceiver() {
         override fun onReceive(context: Context?, intent: Intent?) {
             StringBuilder().apply {
@@ -52,9 +50,9 @@ class HomeFragment : Fragment() {
             }
         }
     }
-
     private var _binding: FragmentHomeBinding? = null
     private val binding get() = _binding!!
+    private var isDataSetWorld: Boolean = false
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -70,20 +68,21 @@ class HomeFragment : Fragment() {
         binding.mainFragmentRecyclerView.adapter = adapter
         binding.mainFragmentFAB.setOnClickListener { changeWeatherDataSet() }
         homeViewModel.getLiveData().observe(viewLifecycleOwner, { renderData(it) })
-        homeViewModel.getWeatherFromLocalSourceRus()
+        showListOfTowns()
 //        val filter = IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION)
 //        context?.registerReceiver(broadcastReceiver, filter)
     }
 
     private fun changeWeatherDataSet() {
-        if (isDataSetRus) {
-            homeViewModel.getWeatherFromLocalSourceWorld()
-//            binding.mainFragmentFAB.setImageResource(R.drawable.ic_earth)
-        } else {
+        if (isDataSetWorld) {
             homeViewModel.getWeatherFromLocalSourceRus()
 //            binding.mainFragmentFAB.setImageResource(R.drawable.ic_russia)
+        } else {
+            homeViewModel.getWeatherFromLocalSourceWorld()
+//            binding.mainFragmentFAB.setImageResource(R.drawable.ic_earth)
         }
-        isDataSetRus = !isDataSetRus
+        isDataSetWorld = !isDataSetWorld
+        saveListOfTowns(isDataSetWorld)
     }
 
     private fun renderData(appState: AppState) {
@@ -105,6 +104,26 @@ class HomeFragment : Fragment() {
         }
     }
 
+    private fun saveListOfTowns(isDataSetWorld: Boolean) {
+        activity?.let {
+            with(it.getPreferences(Context.MODE_PRIVATE).edit()) {
+                putBoolean(IS_WORLD_KEY, isDataSetWorld)
+                apply()
+            }
+        }
+    }
+
+    private fun showListOfTowns() {
+        activity?.let {
+            if (it.getPreferences(Context.MODE_PRIVATE).getBoolean(IS_WORLD_KEY,
+                    false)) {
+                changeWeatherDataSet()
+            } else {
+                homeViewModel.getWeatherFromLocalSourceRus()
+            }
+        }
+    }
+
     private fun View.showSnackBar(
         text: String,
         actionText: String,
@@ -114,13 +133,13 @@ class HomeFragment : Fragment() {
         Snackbar.make(this, text, length).setAction(actionText, action).show()
     }
 
+    interface OnItemViewClickListener {
+        fun onItemViewClick(weather: Weather)
+    }
+
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
-    }
-
-    interface OnItemViewClickListener {
-        fun onItemViewClick(weather: Weather)
     }
 
     override fun onDestroy() {
