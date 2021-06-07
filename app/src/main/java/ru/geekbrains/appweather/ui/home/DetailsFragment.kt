@@ -2,16 +2,17 @@ package ru.geekbrains.appweather.ui.home
 
 import android.net.Uri
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import coil.api.load
 import com.github.twocoffeesoneteam.glidetovectoryou.GlideToVectorYou
 import kotlinx.android.synthetic.main.fragment_details.*
-import ru.geekbrains.appweather.*
+import ru.geekbrains.appweather.R
 import ru.geekbrains.appweather.databinding.FragmentDetailsBinding
+import ru.geekbrains.appweather.model.City
 import ru.geekbrains.appweather.model.Weather
 import ru.geekbrains.appweather.utils.showSnackBar
 import ru.geekbrains.appweather.viewmodel.AppState
@@ -50,8 +51,10 @@ class DetailsFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         weatherBundle = arguments?.getParcelable(BUNDLE_EXTRA) ?: Weather()
         viewModel.detailsLiveData.observe(viewLifecycleOwner, { renderData(it) })
-        viewModel.getWeatherFromRemoteSource(weatherBundle.city.lat,
-            weatherBundle.city.lon)
+        viewModel.getWeatherFromRemoteSource(
+            weatherBundle.city.lat,
+            weatherBundle.city.lon
+        )
     }
 
     private fun renderData(appState: AppState) {
@@ -71,14 +74,33 @@ class DetailsFragment : Fragment() {
                 binding.mainView.showSnackBar(
                     getString(R.string.error),
                     getString(R.string.reload),
-                    { viewModel.getWeatherFromRemoteSource(weatherBundle.city.lat,
-                        weatherBundle.city.lon) })
+                    {
+                        viewModel.getWeatherFromRemoteSource(
+                            weatherBundle.city.lat,
+                            weatherBundle.city.lon
+                        )
+                    })
             }
         }
     }
 
+    private fun saveCity(
+        city: City,
+        weather: Weather
+    ) {
+        viewModel.saveCityToDB(
+            Weather(
+                city,
+                weather.temperature,
+                weather.feelsLike,
+                weather.condition
+            )
+        )
+    }
+
     private fun setWeather(weather: Weather) {
         val city = weatherBundle.city
+        saveCity(city, weather)
         binding.headerIcon.load("https://freepngimg.com/thumb/house/8-2-office-building-png.png")
         binding.cityName.text = city.city
         binding.cityCoordinates.text = String.format(
