@@ -5,7 +5,7 @@ import androidx.room.RoomDatabase
 
 @Database(
     entities = [HistoryEntity::class, FavoritesEntity::class],
-    version = 3,
+    version = 4,
     exportSchema = false
 )
 

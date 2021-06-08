@@ -11,7 +11,7 @@ import coil.api.load
 import com.github.twocoffeesoneteam.glidetovectoryou.GlideToVectorYou
 import kotlinx.android.synthetic.main.fragment_details.*
 import ru.geekbrains.appweather.R
-import ru.geekbrains.appweather.databinding.FragmentDetailsBinding
+import ru.geekbrains.appweather.databinding.*
 import ru.geekbrains.appweather.model.City
 import ru.geekbrains.appweather.model.Weather
 import ru.geekbrains.appweather.utils.showSnackBar
@@ -101,6 +101,7 @@ class DetailsFragment : Fragment() {
     private fun setWeather(weather: Weather) {
         val city = weatherBundle.city
         saveCity(city, weather)
+        binding.favoritesFab.setOnClickListener { viewModel.addCityToFavorites(city.city) }
         binding.headerIcon.load("https://freepngimg.com/thumb/house/8-2-office-building-png.png")
         binding.cityName.text = city.city
         binding.cityCoordinates.text = String.format(

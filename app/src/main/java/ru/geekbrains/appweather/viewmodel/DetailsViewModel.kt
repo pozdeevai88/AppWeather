@@ -24,8 +24,13 @@ class DetailsViewModel(
         detailsLiveData.value = AppState.Loading
         detailsRepositoryImpl.getWeatherDetailsFromServer(lat, lon, callBack)
     }
+
     fun saveCityToDB(weather: Weather) {
         historyRepository.saveEntity(weather)
+    }
+
+    fun addCityToFavorites(city: String) {
+        historyRepository.insertFavorites(city)
     }
 
     private val callBack = object :

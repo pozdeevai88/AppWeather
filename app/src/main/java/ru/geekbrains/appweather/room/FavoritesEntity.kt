@@ -7,5 +7,5 @@ import androidx.room.PrimaryKey
 data class FavoritesEntity(
     @PrimaryKey(autoGenerate = true)
     val id: Long,
-    val city: String,
+    val city: String
 )

@@ -1,6 +1,7 @@
 package ru.geekbrains.appweather.utils
 
 import ru.geekbrains.appweather.model.*
+import ru.geekbrains.appweather.room.FavoritesEntity
 import ru.geekbrains.appweather.room.HistoryEntity
 
 fun convertDtoToModel(weatherDTO: WeatherDTO): List<Weather> {
@@ -8,7 +9,8 @@ fun convertDtoToModel(weatherDTO: WeatherDTO): List<Weather> {
     return listOf(
         Weather(
             getDefaultCity(), fact.temp!!, fact.feels_like!!,
-        fact.condition!!, fact.icon!!)
+            fact.condition!!, fact.icon!!
+        )
     )
 }
 
@@ -21,4 +23,8 @@ fun convertHistoryEntityToWeather(entityList: List<HistoryEntity>):
 
 fun convertWeatherToEntity(weather: Weather): HistoryEntity {
     return HistoryEntity(0, weather.city.city, weather.temperature, weather.condition)
+}
+
+fun convertCityToEntity(city: String): FavoritesEntity {
+    return FavoritesEntity(0, city)
 }
