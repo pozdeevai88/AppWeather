@@ -4,28 +4,51 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.TextView
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
-import ru.geekbrains.appweather.R
+import kotlinx.android.synthetic.main.fragment_slideshow.*
+import ru.geekbrains.appweather.databinding.FragmentSlideshowBinding
+import ru.geekbrains.appweather.viewmodel.FavoritesViewModel
 
 class SlideshowFragment : Fragment() {
 
-    private lateinit var slideshowViewModel: SlideshowViewModel
+    private var _binding: FragmentSlideshowBinding? = null
+    private val binding get() = _binding!!
+    private val viewModel: FavoritesViewModel by lazy {
+        ViewModelProvider(this).get(
+            FavoritesViewModel::class.java
+        )
+    }
+    private val adapter: FavoritesAdapter by lazy { FavoritesAdapter() }
 
     override fun onCreateView(
-            inflater: LayoutInflater,
-            container: ViewGroup?,
-            savedInstanceState: Bundle?
+        inflater: LayoutInflater, container: ViewGroup?,
+        savedInstanceState: Bundle?
     ): View? {
-        slideshowViewModel =
-                ViewModelProvider(this).get(SlideshowViewModel::class.java)
-        val root = inflater.inflate(R.layout.fragment_slideshow, container, false)
-        val textView: TextView = root.findViewById(R.id.text_slideshow)
-        slideshowViewModel.text.observe(viewLifecycleOwner, Observer {
-            textView.text = it
-        })
-        return root
+        _binding = FragmentSlideshowBinding.inflate(inflater, container, false)
+        return binding.root
     }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        favoritesFragmentRecyclerview.adapter = adapter
+        viewModel.favoritesLiveData.observe(viewLifecycleOwner, { renderData(it) })
+        viewModel.getAllFavorites()
+    }
+
+    private fun renderData(favorites : List<String>) {
+        adapter.setData(favorites)
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
+    }
+
+    companion object {
+        @JvmStatic
+        fun newInstance() =
+            SlideshowFragment()
+    }
+
 }

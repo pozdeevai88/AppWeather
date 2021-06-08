@@ -28,3 +28,11 @@ fun convertWeatherToEntity(weather: Weather): HistoryEntity {
 fun convertCityToEntity(city: String): FavoritesEntity {
     return FavoritesEntity(0, city)
 }
+
+fun convertFavoritesEntityToString(entityList: List<FavoritesEntity>): List<String> {
+    val favList: MutableList<String> = arrayListOf()
+    for (item in entityList) {
+        favList.add(item.city)
+    }
+    return favList
+}
