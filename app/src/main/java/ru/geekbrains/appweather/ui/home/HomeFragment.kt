@@ -38,6 +38,7 @@ class HomeFragment : Fragment() {
             }
         }
     })
+
     private val broadcastReceiver: BroadcastReceiver = object : BroadcastReceiver() {
         override fun onReceive(context: Context?, intent: Intent?) {
             StringBuilder().apply {
@@ -51,6 +52,7 @@ class HomeFragment : Fragment() {
             }
         }
     }
+
     private var _binding: FragmentHomeBinding? = null
     private val binding get() = _binding!!
     private var isDataSetWorld: Boolean = false

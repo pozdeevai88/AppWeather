@@ -3,16 +3,17 @@ package ru.geekbrains.appweather.ui.slideshow
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import androidx.recyclerview.widget.RecyclerView
 import kotlinx.android.synthetic.main.fragment_favorites_recycler_item.view.*
-import kotlinx.android.synthetic.main.fragment_history_recycler_item.view.*
 import ru.geekbrains.appweather.R
+import ru.geekbrains.appweather.model.Weather
+import ru.geekbrains.appweather.repository.Repository
+import ru.geekbrains.appweather.repository.RepositoryImpl
+import ru.geekbrains.appweather.ui.home.HomeFragment
 
-class FavoritesAdapter :
+class FavoritesAdapter(private var onItemViewClickListener: SlideshowFragment.OnItemViewClickListener?) :
     RecyclerView.Adapter<FavoritesAdapter.RecyclerItemViewHolder>() {
     private var data: List<String> = arrayListOf()
-
     fun setData(data: List<String>) {
         this.data = data
         notifyDataSetChanged()
@@ -37,19 +38,24 @@ class FavoritesAdapter :
         return data.size
     }
 
-    inner class RecyclerItemViewHolder(view: View) :
-        RecyclerView.ViewHolder(view) {
+    inner class RecyclerItemViewHolder(view: View) : RecyclerView.ViewHolder(view) {
 
         fun bind(city: String) {
             if (layoutPosition != RecyclerView.NO_POSITION) {
                 itemView.favoritesFragmentRecyclerviewItem.text = city
                 itemView.setOnClickListener {
-                    Toast.makeText(
-                        itemView.context,
-                        "on click: $city",
-                        Toast.LENGTH_SHORT
-                    )
-                        .show()
+                    lateinit var weather: Weather
+                    val repositoryImpl: Repository = RepositoryImpl()
+                    val rusCities = repositoryImpl.getWeatherFromLocalStorageRus()
+                    val wldCities = repositoryImpl.getWeatherFromLocalStorageWorld()
+
+                    for (item in rusCities) {
+                        if (item.city.city == city) weather = item
+                    }
+                    for (item in wldCities) {
+                        if (item.city.city == city) weather = item
+                    }
+                    onItemViewClickListener?.onItemViewClick(weather)
                 }
             }
         }
