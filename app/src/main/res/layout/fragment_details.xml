@@ -122,6 +122,11 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             android:layout_gravity="end"
+            android:outlineAmbientShadowColor="@color/fragmentBackground"
+            android:outlineSpotShadowColor="@color/fragmentBackground"
+            app:backgroundTint="@color/fragmentBackground"
+            app:srcCompat="@drawable/ic_menu_favorites"
+
             app:maxImageSize="@dimen/fab_icon_size" />
     </androidx.appcompat.widget.LinearLayoutCompat>
 

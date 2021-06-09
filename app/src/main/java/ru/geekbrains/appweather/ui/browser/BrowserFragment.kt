@@ -1,4 +1,4 @@
-package ru.geekbrains.appweather.ui.gallery
+package ru.geekbrains.appweather.ui.browser
 
 import android.os.Build
 import android.os.Bundle
@@ -9,10 +9,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.annotation.RequiresApi
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.ViewModelProvider
-import ru.geekbrains.appweather.R
 import ru.geekbrains.appweather.databinding.FragmentGalleryBinding
-import ru.geekbrains.appweather.databinding.FragmentHomeBinding
 import java.io.BufferedReader
 import java.io.InputStreamReader
 import java.net.MalformedURLException
@@ -20,9 +17,9 @@ import java.net.URL
 import java.util.stream.Collectors
 import javax.net.ssl.HttpsURLConnection
 
-class GalleryFragment : Fragment() {
+class BrowserFragment : Fragment() {
 
-    private lateinit var galleryViewModel: GalleryViewModel
+    private lateinit var browserViewModel: BrowserViewModel
     private var _binding: FragmentGalleryBinding? = null
     private val binding get() = _binding!!
 

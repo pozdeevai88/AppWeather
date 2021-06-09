@@ -1,4 +1,4 @@
-package ru.geekbrains.appweather.ui.slideshow
+package ru.geekbrains.appweather.ui.favorites
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -11,11 +11,9 @@ import ru.geekbrains.appweather.R
 import ru.geekbrains.appweather.databinding.FragmentSlideshowBinding
 import ru.geekbrains.appweather.model.Weather
 import ru.geekbrains.appweather.ui.home.DetailsFragment
-import ru.geekbrains.appweather.ui.home.HomeFragment
-import ru.geekbrains.appweather.ui.home.HomeFragmentAdapter
 import ru.geekbrains.appweather.viewmodel.FavoritesViewModel
 
-class SlideshowFragment : Fragment() {
+class FavoritesFragment : Fragment() {
 
     private var _binding: FragmentSlideshowBinding? = null
     private val binding get() = _binding!!
@@ -26,8 +24,9 @@ class SlideshowFragment : Fragment() {
     }
 
     //    private val adapter: FavoritesAdapter by lazy { FavoritesAdapter() }
-    private val adapter = FavoritesAdapter(object : SlideshowFragment.OnItemViewClickListener {
+    private val adapter = FavoritesAdapter(object : FavoritesFragment.OnItemViewClickListener {
         override fun onItemViewClick(weather: Weather) {
+            clearBackStack()
             activity?.supportFragmentManager?.apply {
                 beginTransaction()
                     .replace(R.id.nav_host_fragment, DetailsFragment.newInstance(Bundle().apply {
@@ -53,6 +52,7 @@ class SlideshowFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        clearBackStack()
         favoritesFragmentRecyclerview.adapter = adapter
         viewModel.favoritesLiveData.observe(viewLifecycleOwner, { renderData(it) })
         viewModel.getAllFavorites()
@@ -64,13 +64,20 @@ class SlideshowFragment : Fragment() {
 
     override fun onDestroyView() {
         super.onDestroyView()
+        clearBackStack()
         _binding = null
     }
 
     companion object {
         @JvmStatic
         fun newInstance() =
-            SlideshowFragment()
+            FavoritesFragment()
+    }
+
+    fun clearBackStack() {
+        for (i in 0 until activity?.supportFragmentManager?.backStackEntryCount!!) {
+            activity?.supportFragmentManager?.popBackStack()
+        }
     }
 
 }

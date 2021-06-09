@@ -1,10 +1,10 @@
-package ru.geekbrains.appweather.ui.gallery
+package ru.geekbrains.appweather.ui.browser
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 
-class GalleryViewModel : ViewModel() {
+class BrowserViewModel : ViewModel() {
 
     private val _text = MutableLiveData<String>().apply {
         value = "This is gallery Fragment"

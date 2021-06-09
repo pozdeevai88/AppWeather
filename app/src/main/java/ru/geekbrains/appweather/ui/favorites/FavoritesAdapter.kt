@@ -1,4 +1,4 @@
-package ru.geekbrains.appweather.ui.slideshow
+package ru.geekbrains.appweather.ui.favorites
 
 import android.view.LayoutInflater
 import android.view.View
@@ -9,9 +9,8 @@ import ru.geekbrains.appweather.R
 import ru.geekbrains.appweather.model.Weather
 import ru.geekbrains.appweather.repository.Repository
 import ru.geekbrains.appweather.repository.RepositoryImpl
-import ru.geekbrains.appweather.ui.home.HomeFragment
 
-class FavoritesAdapter(private var onItemViewClickListener: SlideshowFragment.OnItemViewClickListener?) :
+class FavoritesAdapter(private var onItemViewClickListener: FavoritesFragment.OnItemViewClickListener?) :
     RecyclerView.Adapter<FavoritesAdapter.RecyclerItemViewHolder>() {
     private var data: List<String> = arrayListOf()
     fun setData(data: List<String>) {
