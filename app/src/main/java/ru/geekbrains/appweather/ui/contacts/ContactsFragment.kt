@@ -1,6 +1,7 @@
 package ru.geekbrains.appweather.ui.contacts
 
 import android.Manifest
+import android.annotation.SuppressLint
 import android.content.ContentResolver
 import android.content.Context
 import android.content.Intent
@@ -140,7 +141,8 @@ class ContactsFragment : Fragment() {
                         // Берём из Cursor'а столбец с именем
                         val name =
                         cursor.getString(cursor.getColumnIndex(ContactsContract.Contacts.DISPLAY_NAME))
-                        addView(it, name)
+                        val id = cursor.getString(cursor.getColumnIndex(ContactsContract.Contacts._ID))
+                        addView(it, name, id)
                     }
                 }
             }
@@ -151,18 +153,37 @@ class ContactsFragment : Fragment() {
     private fun makeCall() {
         val intent = Intent(Intent.ACTION_CALL);
         intent.data = Uri.parse("tel:$selectedNumber")
+        Toast.makeText(context, "Call to $selectedNumber", Toast.LENGTH_SHORT).show()
         startActivity(intent)
     }
 
-    private fun addView(context: Context, textToShow: String) {
+    private fun addView(context: Context, textToShow: String, id: String) {
         binding.containerForContacts.addView(AppCompatTextView(context).apply {
             text = textToShow
             textSize = resources.getDimension(R.dimen.main_container_text_size)
             setOnClickListener {
-                selectedNumber = "8-909-864-3055"
+                selectedNumber = getPhoneByID(id)
                 checkPermission(REQUEST_CALL)
             }
         })
+    }
+
+    @SuppressLint("Recycle")
+    fun getPhoneByID (id: String): String {
+        val contentResolver: ContentResolver? = context?.contentResolver
+        val phoneCursor: Cursor? = contentResolver?.query(
+            ContactsContract.CommonDataKinds.Phone.CONTENT_URI, null,
+            ContactsContract.CommonDataKinds.Phone.CONTACT_ID + " = " + id, null, null
+        )
+        var phone = ""
+        if (phoneCursor != null) {
+            while (phoneCursor.moveToNext()) {
+                phone = phoneCursor.getString(
+                    phoneCursor.getColumnIndexOrThrow(ContactsContract.CommonDataKinds.Phone.NUMBER)
+                )
+            }
+        }
+        return phone
     }
 
     private fun requestPermission(code: Int) {
