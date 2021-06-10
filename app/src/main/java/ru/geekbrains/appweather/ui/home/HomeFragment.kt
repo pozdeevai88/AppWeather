@@ -1,20 +1,17 @@
 package ru.geekbrains.appweather.ui.home
 
-import android.content.BroadcastReceiver
 import android.content.Context
-import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import com.google.android.material.snackbar.Snackbar
-import ru.geekbrains.appweather.viewmodel.AppState
 import ru.geekbrains.appweather.R
-import ru.geekbrains.appweather.model.Weather
 import ru.geekbrains.appweather.databinding.FragmentHomeBinding
+import ru.geekbrains.appweather.model.Weather
+import ru.geekbrains.appweather.viewmodel.AppState
 import ru.geekbrains.appweather.viewmodel.HomeViewModel
 
 private const val IS_WORLD_KEY = "LIST_OF_TOWNS_KEY"
@@ -24,7 +21,6 @@ class HomeFragment : Fragment() {
     private val homeViewModel: HomeViewModel by lazy {
         ViewModelProvider(this).get(HomeViewModel::class.java)
     }
-    private var isDataSetRus: Boolean = true
 
     private val adapter = HomeFragmentAdapter(object : OnItemViewClickListener {
         override fun onItemViewClick(weather: Weather) {
@@ -39,19 +35,19 @@ class HomeFragment : Fragment() {
         }
     })
 
-    private val broadcastReceiver: BroadcastReceiver = object : BroadcastReceiver() {
-        override fun onReceive(context: Context?, intent: Intent?) {
-            StringBuilder().apply {
-                append("СООБЩЕНИЕ ОТ СИСТЕМЫ\n")
-                if (intent != null) {
-                    append("Action: ${intent.action}")
-                }
-                toString().also {
-                    Toast.makeText(context, it, Toast.LENGTH_LONG).show()
-                }
-            }
-        }
-    }
+//    private val broadcastReceiver: BroadcastReceiver = object : BroadcastReceiver() {
+//        override fun onReceive(context: Context?, intent: Intent?) {
+//            StringBuilder().apply {
+//                append("СООБЩЕНИЕ ОТ СИСТЕМЫ\n")
+//                if (intent != null) {
+//                    append("Action: ${intent.action}")
+//                }
+//                toString().also {
+//                    Toast.makeText(context, it, Toast.LENGTH_LONG).show()
+//                }
+//            }
+//        }
+//    }
 
     private var _binding: FragmentHomeBinding? = null
     private val binding get() = _binding!!
@@ -118,8 +114,11 @@ class HomeFragment : Fragment() {
 
     private fun showListOfTowns() {
         activity?.let {
-            if (it.getPreferences(Context.MODE_PRIVATE).getBoolean(IS_WORLD_KEY,
-                    false)) {
+            if (it.getPreferences(Context.MODE_PRIVATE).getBoolean(
+                    IS_WORLD_KEY,
+                    false
+                )
+            ) {
                 changeWeatherDataSet()
             } else {
                 homeViewModel.getWeatherFromLocalSourceRus()

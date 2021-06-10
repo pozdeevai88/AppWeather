@@ -19,7 +19,6 @@ import javax.net.ssl.HttpsURLConnection
 
 class BrowserFragment : Fragment() {
 
-    private lateinit var browserViewModel: BrowserViewModel
     private var _binding: FragmentGalleryBinding? = null
     private val binding get() = _binding!!
 
@@ -27,7 +26,7 @@ class BrowserFragment : Fragment() {
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         _binding = FragmentGalleryBinding.inflate(inflater, container, false)
         return binding.root
     }
@@ -37,7 +36,7 @@ class BrowserFragment : Fragment() {
         binding.ok.setOnClickListener(clickListener)
     }
 
-    var clickListener: View.OnClickListener = object : View.OnClickListener {
+    private var clickListener: View.OnClickListener = object : View.OnClickListener {
         @RequiresApi(Build.VERSION_CODES.N)
         override fun onClick(v: View?) {
             try {

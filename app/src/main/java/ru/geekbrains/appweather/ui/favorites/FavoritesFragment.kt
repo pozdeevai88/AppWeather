@@ -23,8 +23,7 @@ class FavoritesFragment : Fragment() {
         )
     }
 
-    //    private val adapter: FavoritesAdapter by lazy { FavoritesAdapter() }
-    private val adapter = FavoritesAdapter(object : FavoritesFragment.OnItemViewClickListener {
+    private val adapter = FavoritesAdapter(object : OnItemViewClickListener {
         override fun onItemViewClick(weather: Weather) {
             clearBackStack()
             activity?.supportFragmentManager?.apply {
@@ -45,7 +44,7 @@ class FavoritesFragment : Fragment() {
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         _binding = FragmentSlideshowBinding.inflate(inflater, container, false)
         return binding.root
     }
@@ -66,12 +65,6 @@ class FavoritesFragment : Fragment() {
         super.onDestroyView()
         clearBackStack()
         _binding = null
-    }
-
-    companion object {
-        @JvmStatic
-        fun newInstance() =
-            FavoritesFragment()
     }
 
     fun clearBackStack() {
