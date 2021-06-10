@@ -3,8 +3,10 @@ package ru.geekbrains.appweather.ui.contacts
 import android.Manifest
 import android.content.ContentResolver
 import android.content.Context
+import android.content.Intent
 import android.content.pm.PackageManager
 import android.database.Cursor
+import android.net.Uri
 import android.os.Bundle
 import android.provider.ContactsContract
 import android.view.LayoutInflater
@@ -18,12 +20,14 @@ import androidx.fragment.app.Fragment
 import ru.geekbrains.appweather.R
 import ru.geekbrains.appweather.databinding.FragmentContactsBinding
 
-const val REQUEST_CODE = 42
+const val REQUEST_CONTACTS = 42
+const val REQUEST_CALL = 43
 
 class ContactsFragment : Fragment() {
 
     private var _binding: FragmentContactsBinding? = null
     private val binding get() = _binding!!
+    private var selectedNumber: String? = null
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -36,38 +40,47 @@ class ContactsFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        checkPermission()
-//        binding.#####.setOnClickListener(clickListener)
+        checkPermission(REQUEST_CONTACTS)
     }
 
-    private fun checkPermission() {
-        context?.let {
-            when {
-                ContextCompat.checkSelfPermission(it,Manifest.permission.READ_CONTACTS) ==
-                        PackageManager.PERMISSION_GRANTED -> {
-                        //Доступ к контактам на телефоне есть
-                        getContacts()
+    private fun checkPermission(code: Int) {
+        when (code) {
+            REQUEST_CONTACTS -> {
+                context?.let {
+                    when {
+                        ContextCompat.checkSelfPermission(it,Manifest.permission.READ_CONTACTS) == PackageManager.PERMISSION_GRANTED -> { getContacts() }
+                        shouldShowRequestPermissionRationale(Manifest.permission.READ_CONTACTS) -> {
+                            AlertDialog.Builder(it)
+                                .setTitle("Доступ к контактам")
+                                .setMessage("Объяснение")
+                                .setPositiveButton("Предоставить доступ") { _, _ -> requestPermission(code) }
+                                .setNegativeButton("Не надо") { dialog, _ -> dialog.dismiss() }
+                                .create()
+                                .show()
                         }
-                //Опционально: если нужно пояснение перед запросом разрешений
-                shouldShowRequestPermissionRationale(Manifest.permission.READ_CONTACTS) -> {
-                    AlertDialog.Builder(it)
-                        .setTitle("Доступ к контактам")
-                        .setMessage("Объяснение")
-                        .setPositiveButton("Предоставить доступ") { _, _ ->
-                            requestPermission()
-                        }
-                        .setNegativeButton("Не надо") { dialog, _ ->
-                            dialog.dismiss()
-                        }
-                        .create()
-                        .show()
+                        else -> { requestPermission(code) }
+                    }
                 }
-                else -> {
-                    //Запрашиваем разрешение
-                    requestPermission()
+            }
+            REQUEST_CALL -> {
+                context?.let {
+                    when {
+                        ContextCompat.checkSelfPermission(it,Manifest.permission.CALL_PHONE) == PackageManager.PERMISSION_GRANTED -> { makeCall() }
+                        shouldShowRequestPermissionRationale(Manifest.permission.CALL_PHONE) -> {
+                            AlertDialog.Builder(it)
+                                .setTitle("Совершение вызовов")
+                                .setMessage("Объяснение")
+                                .setPositiveButton("Предоставить доступ") { _, _ -> requestPermission(code) }
+                                .setNegativeButton("Не надо") { dialog, _ -> dialog.dismiss() }
+                                .create()
+                                .show()
+                        }
+                        else -> { requestPermission(code) }
+                    }
                 }
             }
         }
+
     }
 
     override fun onRequestPermissionsResult(
@@ -75,24 +88,36 @@ class ContactsFragment : Fragment() {
         permissions: Array<String>, grantResults: IntArray
     ) {
         when (requestCode) {
-                REQUEST_CODE -> {
-                // Проверяем, дано ли пользователем разрешение по нашему запросу
+            REQUEST_CONTACTS -> {
                 if ((grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED)) {
                     getContacts()
                 } else {
-                    // Поясните пользователю, что экран останется пустым, потому что доступ к контактам не предоставлен
                     context?.let {
                         AlertDialog.Builder(it)
                             .setTitle("Доступ к контактам")
                             .setMessage("Объяснение")
-                            .setNegativeButton("Закрыть") { dialog, _ ->
-                                dialog.dismiss() }
+                            .setNegativeButton("Закрыть") { dialog, _ -> dialog.dismiss() }
                             .create()
                             .show()
                     }
                 }
                     return
                 }
+            REQUEST_CALL -> {
+                if ((grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED)) {
+                    makeCall()
+                } else {
+                    context?.let {
+                        AlertDialog.Builder(it)
+                            .setTitle("Совершение вызовов")
+                            .setMessage("Объяснение")
+                            .setNegativeButton("Закрыть") { dialog, _ -> dialog.dismiss() }
+                            .create()
+                            .show()
+                    }
+                }
+                return
+            }
         }
     }
 
@@ -123,23 +148,27 @@ class ContactsFragment : Fragment() {
         }
     }
 
+    private fun makeCall() {
+        val intent = Intent(Intent.ACTION_CALL);
+        intent.data = Uri.parse("tel:$selectedNumber")
+        startActivity(intent)
+    }
+
     private fun addView(context: Context, textToShow: String) {
         binding.containerForContacts.addView(AppCompatTextView(context).apply {
             text = textToShow
             textSize = resources.getDimension(R.dimen.main_container_text_size)
             setOnClickListener {
-                
+                selectedNumber = "8-909-864-3055"
+                checkPermission(REQUEST_CALL)
             }
         })
     }
 
-    private fun requestPermission() {
-        requestPermissions(arrayOf(Manifest.permission.READ_CONTACTS), REQUEST_CODE)
-    }
-
-    private var clickListener: View.OnClickListener = object : View.OnClickListener {
-        override fun onClick(v: View?) {
-
+    private fun requestPermission(code: Int) {
+        when (code) {
+            REQUEST_CONTACTS -> requestPermissions(arrayOf(Manifest.permission.READ_CONTACTS), code)
+            REQUEST_CALL -> requestPermissions(arrayOf(Manifest.permission.CALL_PHONE), code)
         }
     }
 
