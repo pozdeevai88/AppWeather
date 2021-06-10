@@ -22,4 +22,10 @@
         android:name="ru.geekbrains.appweather.ui.favorites.FavoritesFragment"
         android:label="@string/menu_favorites"
         tools:layout="@layout/fragment_slideshow" />
+
+    <fragment
+        android:id="@+id/nav_contacts"
+        android:name="ru.geekbrains.appweather.ui.contacts.ContactsFragment"
+        android:label="@string/menu_contacts"
+        tools:layout="@layout/fragment_contacts" />
 </navigation>
