@@ -28,4 +28,10 @@
         android:name="ru.geekbrains.appweather.ui.contacts.ContactsFragment"
         android:label="@string/menu_contacts"
         tools:layout="@layout/fragment_contacts" />
+
+    <fragment
+        android:id="@+id/nav_map"
+        android:name="ru.geekbrains.appweather.ui.maps.MapsFragment"
+        android:label="@string/menu_map"
+        tools:layout="@layout/fragment_maps" />
 </navigation>
