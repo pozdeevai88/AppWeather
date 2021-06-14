@@ -289,10 +289,10 @@ class HomeFragment : Fragment() {
     private fun changeWeatherDataSet() {
         if (isDataSetWorld) {
             homeViewModel.getWeatherFromLocalSourceRus()
-//            binding.mainFragmentFAB.setImageResource(R.drawable.ic_russia)
+            binding.mainFragmentFAB.setImageResource(R.drawable.icon_rus)
         } else {
             homeViewModel.getWeatherFromLocalSourceWorld()
-//            binding.mainFragmentFAB.setImageResource(R.drawable.ic_earth)
+            binding.mainFragmentFAB.setImageResource(R.drawable.icon_earth)
         }
         isDataSetWorld = !isDataSetWorld
         saveListOfTowns(isDataSetWorld)
