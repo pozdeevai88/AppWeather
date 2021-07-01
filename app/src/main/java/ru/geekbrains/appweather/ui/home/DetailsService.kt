@@ -85,8 +85,10 @@ class DetailsService(name: String = "DetailService") : IntentService(name) {
         }
     }
 
-    private fun onSuccessResponse(temp: Int?, feelsLike: Int?, condition:
-    String?) {
+    private fun onSuccessResponse(
+        temp: Int?, feelsLike: Int?, condition:
+        String?
+    ) {
         putLoadResult(DETAILS_RESPONSE_SUCCESS_EXTRA)
         broadcastIntent.putExtra(DETAILS_TEMP_EXTRA, temp)
         broadcastIntent.putExtra(DETAILS_FEELS_LIKE_EXTRA, feelsLike)

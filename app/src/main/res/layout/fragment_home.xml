@@ -31,10 +31,9 @@
         android:background="@color/loadingBackground"
         android:visibility="gone"
         tools:visibility="visible">
-        <ProgressBar
-            style="?android:attr/progressBarStyleLarge"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center" />
+
+        <include
+            android:id="@+id/includedLoadingLayout"
+            layout="@layout/loading_layout" />
     </FrameLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

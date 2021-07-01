@@ -1,4 +1,4 @@
-package ru.geekbrains.appweather.ui.gallery
+package ru.geekbrains.appweather.ui.browser
 
 import android.os.Build
 import android.os.Bundle
@@ -9,10 +9,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.annotation.RequiresApi
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.ViewModelProvider
-import ru.geekbrains.appweather.R
 import ru.geekbrains.appweather.databinding.FragmentGalleryBinding
-import ru.geekbrains.appweather.databinding.FragmentHomeBinding
 import java.io.BufferedReader
 import java.io.InputStreamReader
 import java.net.MalformedURLException
@@ -20,9 +17,8 @@ import java.net.URL
 import java.util.stream.Collectors
 import javax.net.ssl.HttpsURLConnection
 
-class GalleryFragment : Fragment() {
+class BrowserFragment : Fragment() {
 
-    private lateinit var galleryViewModel: GalleryViewModel
     private var _binding: FragmentGalleryBinding? = null
     private val binding get() = _binding!!
 
@@ -30,7 +26,7 @@ class GalleryFragment : Fragment() {
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         _binding = FragmentGalleryBinding.inflate(inflater, container, false)
         return binding.root
     }
@@ -40,7 +36,7 @@ class GalleryFragment : Fragment() {
         binding.ok.setOnClickListener(clickListener)
     }
 
-    var clickListener: View.OnClickListener = object : View.OnClickListener {
+    private var clickListener: View.OnClickListener = object : View.OnClickListener {
         @RequiresApi(Build.VERSION_CODES.N)
         override fun onClick(v: View?) {
             try {
