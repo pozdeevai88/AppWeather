@@ -9,13 +9,16 @@ import android.location.Location
 import android.location.LocationListener
 import android.location.LocationManager
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
+import com.google.android.gms.tasks.OnCompleteListener
 import com.google.android.material.snackbar.Snackbar
+import com.google.firebase.messaging.FirebaseMessaging
 import kotlinx.android.synthetic.main.fragment_home.*
 import ru.geekbrains.appweather.R
 import ru.geekbrains.appweather.databinding.FragmentHomeBinding
@@ -92,9 +95,24 @@ class HomeFragment : Fragment() {
         binding.mainFragmentFAB.setOnClickListener { changeWeatherDataSet() }
         binding.mainFragmentFABLocation.setOnClickListener { checkPermission() }
         homeViewModel.getLiveData().observe(viewLifecycleOwner, { renderData(it) })
+        getCloudMessagingToken()
         showListOfTowns()
 //        val filter = IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION)
 //        context?.registerReceiver(broadcastReceiver, filter)
+    }
+
+    fun getCloudMessagingToken() {
+        FirebaseMessaging.getInstance().token.addOnCompleteListener(OnCompleteListener { task ->
+            if (!task.isSuccessful) {
+                Log.w("######", "Fetching FCM registration token failed", task.exception)
+                return@OnCompleteListener
+            }
+            val token = task.result
+            if (token != null) {
+                Log.e("######", token)
+            }
+        })
+        FirebaseMessaging.getInstance().getToken()
     }
 
     private fun checkPermission() {

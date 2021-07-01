@@ -26,7 +26,9 @@ android {
         Properties properties = new Properties()
         properties.load(project.rootProject.file("apikey.properties").newDataInputStream())
         def apiKey = properties.getProperty("yandex_weather_api_key", "")
+        def mapsApiKey = properties.getProperty("google_maps_api_key", "")
         it.buildConfigField "String", "WEATHER_API_KEY", apiKey
+        it.buildConfigField "String", "GOOGLE_MAPS_API_KEY", mapsApiKey
     }
 
     buildTypes {
@@ -63,10 +65,12 @@ dependencies {
     implementation 'androidx.navigation:navigation-ui-ktx:2.3.5'
     implementation 'androidx.legacy:legacy-support-v4:1.0.0'
     implementation 'androidx.room:room-runtime:2.3.0'
+    implementation 'com.google.firebase:firebase-messaging-ktx:22.0.0'
 
     kapt 'androidx.room:room-compiler:2.3.0'
     testImplementation 'junit:junit:4.13.2'
     androidTestImplementation 'androidx.test.ext:junit:1.1.2'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.3.0'
-
 }
+
+apply plugin: 'com.google.gms.google-services'
