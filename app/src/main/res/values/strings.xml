@@ -1,7 +1,5 @@
 <resources>
     <string name="app_name">AppWeather</string>
-    <string name="navigation_drawer_open">Open navigation drawer</string>
-    <string name="navigation_drawer_close">Close navigation drawer</string>
     <string name="nav_header_title">AppWeather</string>
     <string name="nav_header_subtitle">appweather@company.com</string>
     <string name="nav_header_desc">Navigation header</string>
@@ -13,4 +11,8 @@
     <string name="temperature_label">Температура</string>
     <string name="feels_like_label">Ощущается как</string>
     <string name="city_coordinates">lt/ln: %s, %s"</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="error">Ошибка</string>
+    <string name="reload">Перезагрузка</string>
 </resources>
