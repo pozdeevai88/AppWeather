@@ -13,12 +13,11 @@ import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import com.google.android.material.snackbar.Snackbar
-import ru.geekbrains.appweather.AppState
+import ru.geekbrains.appweather.viewmodel.AppState
 import ru.geekbrains.appweather.R
-import ru.geekbrains.appweather.Weather
+import ru.geekbrains.appweather.model.Weather
 import ru.geekbrains.appweather.databinding.FragmentHomeBinding
-import java.util.*
-
+import ru.geekbrains.appweather.viewmodel.HomeViewModel
 
 class HomeFragment : Fragment() {
 
@@ -72,8 +71,8 @@ class HomeFragment : Fragment() {
         binding.mainFragmentFAB.setOnClickListener { changeWeatherDataSet() }
         homeViewModel.getLiveData().observe(viewLifecycleOwner, { renderData(it) })
         homeViewModel.getWeatherFromLocalSourceRus()
-        val filter = IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION)
-        context?.registerReceiver(broadcastReceiver, filter)
+//        val filter = IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION)
+//        context?.registerReceiver(broadcastReceiver, filter)
     }
 
     private fun changeWeatherDataSet() {
@@ -92,8 +91,6 @@ class HomeFragment : Fragment() {
             is AppState.Success -> {
                 binding.mainFragmentLoadingLayout.visibility = View.GONE
                 adapter.setWeather(appState.weatherData)
-//                binding.mainFragmentRootView.showSnackBarFromRes(R.string.app_name)
-//                binding.mainFragmentRootView.showSnackBarNoAction()
             }
             is AppState.Loading -> {
                 binding.mainFragmentLoadingLayout.visibility = View.VISIBLE
@@ -115,16 +112,6 @@ class HomeFragment : Fragment() {
         length: Int = Snackbar.LENGTH_INDEFINITE
     ) {
         Snackbar.make(this, text, length).setAction(actionText, action).show()
-    }
-
-    private fun View.showSnackBarFromRes(
-        id: Int
-    ) {
-        Snackbar.make(this, context.resources.getText(id) ,2000).show()
-    }
-
-    private fun View.showSnackBarNoAction() {
-        Snackbar.make(this, R.string.app_name ,2000).show()
     }
 
     override fun onDestroyView() {

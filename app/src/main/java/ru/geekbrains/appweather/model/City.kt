@@ -1,4 +1,4 @@
-package ru.geekbrains.appweather
+package ru.geekbrains.appweather.model
 
 import android.os.Parcelable
 import kotlinx.android.parcel.Parcelize
